@@ -19,6 +19,9 @@ public:
     ~CommentWindow();
     static CommentWindow* MyInstance;
     void GetComment(MusicInfomation Music, int Page);
+    QString CurrentUserName="";
+    void Logined();
+    QVector<int> CommentIDs;
 signals:
     void WindowMoved();
 protected:
@@ -30,6 +33,10 @@ private slots:
     void on_PreButton_clicked();
 
     void on_RefreshButton_clicked();
+
+    void on_LoginAndComment_clicked();
+
+    void on_CommentList_customContextMenuRequested(const QPoint &pos);
 
 private:
     struct SameLabelCollection
@@ -49,6 +56,7 @@ private:
     class QNetworkAccessManager* NetworkM=NULL;
     void AddComment(QJsonObject JsonObject);
     void onWindowMoved();
+    void SubmitComment(int MusicID,int TargetComment);
 };
 
 #endif // COMMENTWINDOW_H

@@ -23,6 +23,7 @@ struct MusicInfomation
     AlbumInfomation Album; //只有一个专辑
     //QVector<ArtistInfomation> Artists; //可能存在多个艺术家(Deprecated)
     QString ArtistsName;
+    unsigned int LyricID=0; //0 Means No Lyric;
     //QVector<int> Quality;   //64000,128000,198000,320000(Deprecated)
     //int Length; //毫秒单位(Deprecated)
     QString URL;

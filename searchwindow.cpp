@@ -98,13 +98,12 @@ void SearchWindow::BeginSearch(int Page)
                 CoreObj=MusicArray[i].toObject();
                 MI.ID = CoreObj.find("MusicID").value().toInt();
                 MI.Name= CoreObj.find("MusicName").value().toString();
-                QJsonValue tmpV=CoreObj.find("MusicianName").value();
-                MI.ArtistsName=tmpV.isString()?tmpV.toString():"Unknow Musician";
-                tmpV=CoreObj.find("AlbumName").value();
+                MI.ArtistsName=CoreObj.find("MusicianName").value().toString("Unknow Musician");
                 MI.Album.ID=CoreObj.find("AlbumID").value().toInt();
-                MI.Album.Name =tmpV.isString()?tmpV.toString():"Unknow Album";
+                MI.Album.Name =CoreObj.find("AlbumName").value().toString("Unknow Album");
                 MI.Album.PicURL=CoreObj.find("AlbumPicURL").value().toString();
                 MI.URL=CoreObj.find("DownloadLink").value().toString();
+                MI.LyricID=CoreObj.find("LyricID").value().toInt();
                 LastSearchResult_Music.push_back(MI);
                 ui->SearchResult_Music->setItem(i,0,new QTableWidgetItem(MI.Name));//歌曲名
                 ui->SearchResult_Music->setItem(i,1,new QTableWidgetItem(MI.ArtistsName));//艺术家

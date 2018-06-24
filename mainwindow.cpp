@@ -223,23 +223,25 @@ void MainWindow::__CheckAndPlayMusic(MusicInfomation MusicToPlay)
     if(GlobalSetting::AutoCache)
         BeginCache(MusicToPlay);
 beginPlay:
-    MusicPlayerCore->play();/*
-    if(CommentWindow::MyInstance&&CurrentMusicInfo.ID) //获取评论
-        CommentWindow::MyInstance->GetComment(CurrentMusicInfo,0);
+    MusicPlayerCore->play();
+    /*if(CommentWindow::MyInstance&&CurrentMusicInfo.ID) //获取评论
+        CommentWindow::MyInstance->GetComment(CurrentMusicInfo,0);*/
     LRCParserInstance.ClearLyric();
     ui->LyricList->clear();
     disconnect(NetworkM,&QNetworkAccessManager::finished,0,0);
-    connect(NetworkM,&QNetworkAccessManager::finished,this,[=](QNetworkReply* LyricResult) //尝试获取歌词
+    if(MusicToPlay.LyricID)
     {
-        QJsonObject LrcJson=QJsonDocument::fromJson(LyricResult->readAll()).object();
-        if(LrcJson.find("uncollected")==LrcJson.end()||LrcJson.find("uncollected").value().toBool()==false)
+        connect(NetworkM,&QNetworkAccessManager::finished,this,[=](QNetworkReply* LyricResult) //尝试获取歌词
         {
-            auto lrc=LrcJson.find("lrc").value().toObject().find("lyric").value().toString();
-            int k= LRCParserInstance.ParseLRC(lrc);
-            if(LrcJson.find("tlyric").value().toObject().find("version").value().toInt()>0)
+            QJsonObject LrcJson=QJsonDocument::fromJson(LyricResult->readAll()).object();
+            QString LyricStr= LrcJson.find("LyricSource").value().toString();
+            QString LyricTransStr= LrcJson.find("TranslatedLyric").value().toString();
+            LyricStr=QString::asprintf("[offset:%d]\n",LrcJson.find("LyricOffset").value().toInt())+LyricStr;
+            LyricTransStr=LyricTransStr==""?"":QString::asprintf("[offset:%d]\n",LrcJson.find("LyricOffset").value().toInt())+LyricTransStr;
+            int k= LRCParserInstance.ParseLRC(LyricStr);
+            if(LyricTransStr!="")
             {
-                lrc=LrcJson.find("tlyric").value().toObject().find("lyric").value().toString();
-                k=LRCParserInstance.ParseLRC(lrc,LRCParser::LyricType::Translation);
+                k=LRCParserInstance.ParseLRC(LyricTransStr,LRCParser::LyricType::Translation);
                 LRCParserInstance.GenerateMixedLyric();
             }
             auto lrcD= LRCParserInstance.GetLyricData(LyricToShow);
@@ -247,10 +249,10 @@ beginPlay:
             {
                 ui->LyricList->addItem(lrcD[i].Line);
             }
-        }
-    });
-    //调用API
-    NetworkM->get(QNetworkRequest("https://api.imjad.cn/cloudmusic/?type=lyric&id="+QString::asprintf("%d",MusicToPlay.ID)));*/
+        });
+        //调用API
+        NetworkM->get(QNetworkRequest("https://do.jackmyth.cn/MyMusicWebside/Search.php?Type=Lyric&SearchID="+QString::asprintf("%d",MusicToPlay.LyricID)));
+    }
 }
 
 void MainWindow::RemoveFromPlaylist(MusicInfomation MusicToRemove)

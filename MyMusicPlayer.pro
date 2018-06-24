@@ -55,7 +55,8 @@ SOURCES += \
     downloadmanager.cpp \
     downloadwindow.cpp \
     globalsetting.cpp \
-    settingdialog.cpp
+    settingdialog.cpp \
+    registerandlogin.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -85,7 +86,8 @@ HEADERS += \
     downloadmanager.h \
     downloadwindow.h \
     globalsetting.h \
-    settingdialog.h
+    settingdialog.h \
+    registerandlogin.h
 
 FORMS += \
         mainwindow.ui \
@@ -93,7 +95,8 @@ FORMS += \
     commentwindow.ui \
     searchwindow.ui \
     downloadwindow.ui \
-    settingdialog.ui
+    settingdialog.ui \
+    registerandlogin.ui
 
 CONFIG += mobility
 MOBILITY = 
